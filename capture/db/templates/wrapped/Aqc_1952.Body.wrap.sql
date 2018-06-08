@@ -1,0 +1,33 @@
+create or replace package body aqc_1952 wrapped 
+a000000
+b2
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+abcd
+b
+987 2e2
+jtrDTIc4EngkJkyiCO0Y3birtIkwgz1cr0oTfI6KQp0GVW/DIKA1/GvZi4/d7y3xDSZ500NG
+KwDD9+XDO5K15aQ2La/IzWGNYSKiSgj9cnROWaEDskyoVuk/qcG7Tx46xii9aTIdyTTSsIlm
+ajTx5yGazEFrJcPqnlHCGZku1WLfMKaHAGLM1GJTpF+x6J9cgv8hZxtTPl3JYYxlul5YovoQ
+dCiZUwFJFqrP+MDG3MZPxsFkxCmmUXwE6sq5Vtt0GIb6hLQ82JFATeVi65LmKs0cxWhrkZKm
+zbZkU3XF0Rtt/ubOMxrX5SvOJuaGkUtgD2puMD9BVlKVU52RBxViyatWZwpAZ9kaBQEAsRXv
+rs8l/zzmGEkdVPbl35xDc6suVNjI/w1EUzihB11Us79gEWo2Ua2h4FD2Xf8t3FWP0KJMoT+t
++0JI3R1JyxDMSpbXj5h5d+wujyIcRXcoHykBxXAr6yIQmMDDWJFjyaz9xGg8Ogdobab+BiBS
+xAATSglh0kfuA94YSHhfXf/CL4PZpsiZ6h4uyuyCZCYfn5ydju2/KaYqfyeXYF6yqtErWfSU
+bPIjM7R+drESM+/KkzTcwmK2SFi/O0QU6gHcKssgRPZAT8MdpwsbwF80PEl8SWv/m2yduBQU
+L9LOeLnlvO9VRD2H3HOy7dXkCOzU0bZkJcEWfjcGKcQllX2qQiqMKZmtlhmsTosT61lI/wO/
+naaYYBTT
+
+/

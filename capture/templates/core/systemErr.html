@@ -1,0 +1,34 @@
+{% extends "core/coreBase.html" %}
+
+{% block pageHeader %}
+    <h1>System Error</h1>
+    <!--MSG= {{msg}}-->
+    <!--DETAIL= {{msgDetail}}-->
+{% endblock pageHeader %}
+
+{% block pageMiddle %}
+    <p class="pageErr">
+        An unexpected server error has occurred.
+    </p>
+    <p>
+        {{ msg }}
+    </p>
+    <p>
+        <span style="font-weight: bold;">Action</span>: Please restart your browser, and try the
+        operation again.  If it reoccurs then please report this to your site administrator or contact
+        AdvanceQC support.
+    </p>
+    <br/>
+    <div style="text-align: center;">
+        <a href="{% url 'capture:login' %}" data-role="button" data-inline="true">Continue</a>
+    </div>
+    <br/>
+    <br/>
+    <div id="trace" style="display: none;">
+        <pre>
+            {% for line in trace %}
+                {{ line }}
+            {% endfor %}
+        </pre>
+    </div>
+{% endblock pageMiddle %}

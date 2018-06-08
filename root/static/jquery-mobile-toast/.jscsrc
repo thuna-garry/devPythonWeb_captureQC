@@ -1,0 +1,5 @@
+{
+  "preset": "jquery",
+  "validateLineBreaks": "LF",
+  "validateIndentation": 4
+}

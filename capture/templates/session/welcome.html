@@ -1,0 +1,14 @@
+{% extends "core/coreBase.html" %}
+{% load staticfiles %}
+
+{% block pageMiddle %}
+    <div style="margin: auto; max-width:569px; overflow-x: hidden;">
+        <img src="{% static 'resources/aqcCloud.png' %}"/>
+        <p style="margin:1em 0em;">
+            {{ WELCOMEMOTD | safe }}
+        </p>
+        <div style="text-align: right;">
+            <a href="{% url 'capture:login' %}" data-role="button" data-inline="true">Enter</a>
+        </div>
+    </div>
+{% endblock pageMiddle %}

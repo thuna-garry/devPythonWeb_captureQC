@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+{% load staticfiles %}
+
+{% block html %}
+{% endblock html %}
+
+{% block pageScripts %}
+    $(function() {
+        $( document ).tooltip();
+    });
+{% endblock pageScripts %}
+
+{% block pageStyles %}
+{% endblock pageStyles %}
+
+{% block pageTitle %}
+    User Account Edit
+{% endblock pageTitle %}
+
+{% block pageContent %}
+    <form action="{% url 'capture:userEdit' seqUser %}" method="post">{% csrf_token %}
+        <span style="padding-left: 10px;" class="formErr">{{ form.non_field_errors }}</span>
+        <table style="padding-left: 20px;">
+            <tr>
+                <td width=175 />
+                <td width=999 />
+            </tr>
+            {% for f in form %}
+                <tr>
+                    <td class="fieldLabel">{{ f.label_tag }}</td>
+                    <td title="{{ f.help_text }}">{{ f }} <span style="padding-left: 10px;" class="fieldErr">{{ f.errors | striptags }}</span></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td/>
+                <td>
+                    <br/>
+                    <input type="submit" value="Save" />
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock pageContent %}

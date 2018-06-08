@@ -1,0 +1,138 @@
+{% extends "capture/captureBase.html" %}
+
+{% block pageStyles %}
+    <style>
+        .ui-listview > .ui-li-static {
+            padding: 0;
+            text-shadow: none;
+        }
+        .itemContent  {
+            position: relative;
+            padding: 8px;
+        }
+        .itemContentActive   {
+            background-color: #ebffeb;
+            border: 2px solid #bbffbb;
+            padding: 6px
+        }
+        .ui-content {
+            padding: .5em;
+        }
+        .hideMe {
+            visibility: hidden;
+        }
+    </style>
+{% endblock pageStyles %}
+
+{% block localServices %}
+    <script type="text/javascript">
+        captureApp.service('localService', function() {
+            this.foo = function(fparmA, parmB ) {
+            };
+        });
+    </script>
+{% endblock localServices %}
+
+{% block pageDivAttr %} ng-controller="captureFormCtrl" ng-init="init('{{frmName}}')" {% endblock pageDivAttr %}
+
+{% block pageHeaderToolsRight %}
+    {% verbatim %}
+        <div id="buttonBar" style="float: right; margin: 3px 5px 0 0">
+            <span ng-repeat="fld in form.flds">
+                <span ng-if="fld.type == 'action'">
+                    <button ng-click="entryDone($index, true)" class="ui-btn ui-btn-a ui-corner-all ui-mini" style="margin:0 0 0 5px; background-color: inherit">
+                        {{aqcUtils.getFldAttr(form, fld.name, 'label')}}
+                        <span class="fa {{aqcUtils.getFldAttr(form, fld.name, 'icon')}} fa-lg" ></span>
+                    </button>
+                </span>
+            </span>
+        </div>
+    {% endverbatim %}
+{% endblock pageHeaderToolsRight %}
+
+
+{% block pageMiddle %}
+    {% verbatim %}
+        <p class="formDesc">
+                {{ form.desc }}
+        </p>
+        <div ng-repeat="fld in form.flds" class="noSelect">
+            <div ng-if="fld.type == 'lineEdit' || fld.type == 'dateEdit' || fld.type == 'textEdit' || fld.type == 'lookup' || fld.type == 'display'"
+                   class="ajaxLoaded" style="display: table">
+                <div style="display: table-cell; vertical-align: middle; padding: 0em 0em .35em 0em;">
+                    {{fld.label}}
+                </div>
+                <div style="display: table-cell; vertical-align: middle; padding: 0px 0em .35em .5em;">
+                    <table>
+                        <tr ng-if="fld.type == 'lineEdit' || fld.type == 'lookup'">
+                            <td>
+                                <input type="text" id="{{form.name}}-{{fld.name}}"  style="font-size: 100%; display: inline;"
+                                        maxlength="{{fld.length}}" size="{{fld.size}}"
+                                        placeholder="{{fld.prompt}}" value="{{fld.value}}"
+                                        ng-model="fld.value" ng-disabled="!fld.enabled" ng-focus="gotFocus($index)" ng-change="change($index)"
+                                        aqc-keyed-advance="entryDone($index)" ng-blur="entryDone($index)" aqc-select-on-focus />
+                            </td >
+                            <td ng-if="fld.type == 'lookup'" ng-click="lookupShow(fld, fld.listItems, 'pageLookup')" style="padding-left:5px">
+                                <span class="fa fa-search fa-lg" style="color:#aaaaaa"></span>
+                            </td>
+                        </tr>
+                        <tr ng-if="fld.type == 'textEdit'">
+                            <td>
+                                <textarea id="{{form.name}}-{{fld.name}}" style="font-size: 100%; display: inline; width:75vw; height:4em"
+                                       maxlength="{{fld.length}}" placeholder="{{fld.prompt}}"
+                                       ng-model="fld.value" ng-disabled="!fld.enabled" ng-focus="gotFocus($index)" ng-change="change($index)"
+                                       aqc-keyed-advance="entryDone($index)" ng-blur="entryDone($index)" aqc-select-on-focus >
+                                       {{fld.value}}
+                                </textarea>
+                            </td >
+                        </tr>
+                        <tr ng-if="fld.type == 'dateEdit'">
+                            <td style="padding-left:5px">
+                                <button data-inline="true" data-mini="true" ng-click="lookupShow(fld, aqcUtils.getYearLookupList(fld.value),  'pageLookup', 'y'+fld.value.y)">{{fld.value.y}}</button>
+                                <button data-inline="true" data-mini="true" ng-click="lookupShow(fld, aqcUtils.getMonthLookupList(fld.value), 'pageLookup', 'm'+fld.value.m)">{{aqcUtils.monthNamesShort[fld.value.m]}}</button>
+                                <button data-inline="true" data-mini="true" ng-click="lookupShow(fld, aqcUtils.getDayLookupList(fld.value),   'pageLookup', 'd'+fld.value.d)">{{fld.value.d}}</button>
+                            </td>
+                        </tr>
+                        <tr ng-if="fld.type == 'display'">
+                            <td ng-bind-html="fld.value | unsafe">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="display: table-cell; vertical-align: middle; padding: 0em  0em .35em .5em;">
+                    <span ng-if="fld.msgType == 0"                      >{{fld.msg}}</span>
+                    <span ng-if="fld.msgType < 0"  style="color: red;"  >{{fld.msg}}</span>
+                    <span ng-if="fld.msgType > 0"  style="color: blue;" >{{fld.msg}}</span>
+                </div>
+            </div>
+        </div>
+    {% endverbatim %}
+{% endblock pageMiddle %}
+
+
+{% block popup %}
+    {% verbatim %}
+        <div id="pageLookup" data-role="page" class="ui-responsive-panel">
+            <div data-role="header" data-position="fixed" data-tap-toggle="false" class="noSelect">
+                <h1>{{lookupFld.label}}</h1>
+                <button ng-click="lookupCancel()" data-icon="back" data-theme="d" data-shadow="false">Cancel</button>
+            </div>
+
+            <div role="main" class="ui-content">
+                <ul data-role="listview" data-inset="true" class="noSelect">
+                    <li ng-repeat="item in lookupItems">
+                        <div ng-click="lookupSave(item);">
+
+                            <div class="itemContent"  ng-class="item.code == lookupCurVal && 'itemContentActive'">
+                                <h3>{{item.desc}}</h3>
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div ng-class="{overlay: showOverlay}"></div>
+    {% endverbatim %}
+{% endblock popup %}

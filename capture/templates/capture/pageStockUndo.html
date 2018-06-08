@@ -1,0 +1,168 @@
+{% extends "capture/captureBase.html" %}
+
+{% block pageStyles %}
+    <style>
+        .ui-listview > .ui-li-static {
+            padding: 0;
+            text-shadow: none;
+        }
+        .itemContent {
+             margin: 0 .5em;
+        }
+    </style>
+{% endblock pageStyles %}
+
+{% block pageDivAttr %} ng-controller="captureFormStockUndoCtrl" ng-init="init('{{frmName}}')" {% endblock pageDivAttr %}
+
+{% block pageHeaderToolsRight %}
+    {% verbatim %}
+        <div id="buttonBar" style="float: right; margin: 3px 5px 0 0">
+            <span ng-repeat="fld in form.flds">
+                <span ng-if="fld.type == 'action'">
+                    <button ng-click="entryDone($index, true)" class="ui-btn ui-btn-a ui-corner-all ui-mini" style="margin:0 0 0 5px; background-color: inherit">
+                        {{aqcUtils.getFldAttr(form, fld.name, 'label')}}
+                        <span class="fa {{aqcUtils.getFldAttr(form, fld.name, 'icon')}} fa-lg" ></span>
+                    </button>
+                </span>
+            </span>
+        </div>
+    {% endverbatim %}
+{% endblock pageHeaderToolsRight %}
+
+{% block pageMiddle %}
+    {% verbatim %}
+        <p class="formDesc">
+            {{ form.desc }}
+        </p>
+        <div ng-repeat="fld in form.flds" class="noSelect">
+            <div ng-if="fld.type == 'lineEdit'" class="ajaxLoaded" style="display: table">
+                <div style="display: table-cell; vertical-align: middle; padding: 0em 0em .35em 0em;">
+                    {{fld.label}}
+                </div>
+                <div style="display: table-cell; vertical-align: middle; padding: 0px 0em .35em .5em;">
+                    <input type="text" id="{{form.name}}-{{fld.name}}"
+                           maxlength="{{fld.length}}" size="{{fld.size}}"
+                           placeholder="{{fld.prompt}}" value="{{fld.value}}"
+                           ng-model="fld.value" ng-disabled="!fld.enabled"  ng-focus="gotFocus($index)" ng-change="change($index)"
+                           aqc-keyed-advance="entryDone($index)" ng-blur="entryDone($index)" aqc-select-on-focus />
+                </div>
+                <div style="display: table-cell; vertical-align: middle; padding: 0em  0em .35em .5em;">
+                    <span ng-if="fld.msgType == 0"                      >{{fld.msg}}</span>
+                    <span ng-if="fld.msgType < 0"  style="color: red;"  >{{fld.msg}}</span>
+                    <span ng-if="fld.msgType > 0"  style="color: blue;" >{{fld.msg}}</span>
+                </div>
+            </div>
+
+            <div ng-if="fld.name == 'stockTiList'" class="ajaxLoaded">
+                <ul data-role="listview" data-inset="true">
+                    <li ng-repeat="sti in fld.listItems">
+
+                        <div ng-click="detailShow(fld.name,'getUndoForm', sti);" aqc-tap-hold="">
+                            <div class="itemContent">
+                                <div class="floatLeft">
+                                    <h3 style="margin-bottom:0">{{sti.partNum}}</h3>
+                                    <p style="white-space: normal !important; margin: 0">{{sti.partDesc}}</p>
+                                    <p class="floatLeft" style="text-align: right; opacity: .75">
+                                        Cond:&nbsp;&nbsp;<br>
+                                        Serial:&nbsp;&nbsp;</p>
+                                    <p class="floatLeft" style="text-align: left">
+                                        {{sti.partCond}}<br>
+                                        {{sti.serialNum}}</p>
+                                    <div style="clear: both;"></div>
+                                </div>
+
+                                <div class="floatRight">
+                                    <p class="floatRight" style="text-align: right">
+                                        {{sti.taskSeq}}<br>
+                                        {{sti.taskCode}}<br>
+                                        {{sti.activity}}<br>
+                                        {{sti.tiType}}<br>
+                                        {{sti.tiQty}}</p>
+                                    <p class="floatRight" style="text-align: right; opacity: .75">
+                                        Task:&nbsp;&nbsp;<br>
+                                        Code:&nbsp;&nbsp;<br>
+                                        Activity:&nbsp;&nbsp;<br>
+                                        Type:&nbsp;&nbsp;<br>
+                                        Qty:&nbsp;&nbsp;</p>
+                                    <div style="clear: both;"></div>
+                                </div>
+
+                                 <div style="clear: both;"></div>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endverbatim %}
+{% endblock pageMiddle %}
+
+
+{% block popup %}
+    {% verbatim %}
+        <div id="pageItemDetail" data-role="page" class="ui-responsive-panel">
+            <div data-role="header" data-position="fixed" data-tap-toggle="false" class="noSelect">
+                <h1>{{curItem.partNum}}</h1>
+                <button ng-click="detailCancel()" data-icon="back" data-theme="d" data-shadow="false">Cancel</button>
+
+                <ul data-role="listview" data-inset="true" class="noSelect">
+                    <li>
+                        <div class="itemContent">
+                            <div class="floatLeft">
+                                <p style="white-space: normal !important;">{{curItem.partDesc}}</p>
+                                <p class="floatLeft" style="text-align: right; opacity: .75">
+                                    Cond:&nbsp;&nbsp;<br>
+                                    Serial:&nbsp;&nbsp;</p>
+                                <p class="floatLeft" style="text-align: left">
+                                    {{curItem.partCond}}<br>
+                                    {{curItem.serialNum}}</p>
+                                <div style="clear: both;"></div>
+                            </div>
+
+                            <div class="floatRight">
+                                <p class="floatRight" style="text-align: right">
+                                    {{curItem.taskSeq}}<br>
+                                    {{curItem.taskCode}}<br>
+                                    {{curItem.activity}}<br>
+                                    {{curItem.tiType}}<br>
+                                    {{curItem.tiQty}}</p>
+                                <p class="floatRight" style="text-align: right; opacity: .75">
+                                    Task:&nbsp;&nbsp;<br>
+                                    Code:&nbsp;&nbsp;<br>
+                                    Activity:&nbsp;&nbsp;<br>
+                                    Type:&nbsp;&nbsp;<br>
+                                    Qty:&nbsp;&nbsp;</p>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div role="main" class="ui-content">
+                <div ng-repeat="fld in form.flds" class="noSelect">
+                    <div ng-if="fld.type == 'lineEdit' && $index > curIdx" class="ajaxLoaded" style="display: table">
+                        <div style="display: table-cell; vertical-align: middle; padding: 0em 0em .35em 0em;">
+                            {{fld.label}}
+                        </div>
+                        <div style="display: table-cell; vertical-align: middle; padding: 0px 0em .35em .5em;">
+                            <input type="text" id="{{form.name}}-{{fld.name}}"
+                                   maxlength="{{fld.length}}" size="{{fld.size}}"
+                                   placeholder="{{fld.prompt}}" value="{{fld.value}}"
+                                   ng-model="fld.value" ng-disabled="!fld.enabled"  ng-focus="gotFocus($index)" ng-change="change($index)"
+                                   aqc-keyed-advance="detEntryDone($index)" ng-blur="detEntryDone($index)" aqc-select-on-focus />
+                        </div>
+                        <div style="display: table-cell; vertical-align: middle; padding: 0em  0em .35em .5em;">
+                            <span ng-if="fld.msgType == 0"                      >{{fld.msg}}</span>
+                            <span ng-if="fld.msgType < 0"  style="color: red;"  >{{fld.msg}}</span>
+                            <span ng-if="fld.msgType > 0"  style="color: blue;" >{{fld.msg}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-class="{overlay: showOverlay}"></div>
+{% endverbatim %}
+{% endblock popup %}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Demo</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+    <xxlink rel="stylesheet" href="animate.min.css">
+    
+    <style>
+        .pomegranate {
+            /* OVERWRITES */
+            background-color:      #E74C3C !important;
+            -webkit-border-radius: 2px !important;
+                    border-radius: 2px !important;
+
+            /* CUSTOM */
+            box-shadow: 0 2px #C0392B;
+        }
+        .pomegranate p {
+            /* OVERWRITES */
+            /*max-width:  160px    !important;*/
+            /*margin:     0        !important;*/
+            /*padding:    6px 12px !important;*/
+            padding-left: 28px     !important;
+
+            /*font-size:  14px     !important;*/
+            /*color:      #FFFFFF  !important;*/
+            /*text-shadow:none     !important;*/
+
+            /*border:     none     !important;*/
+
+            /* CUSTOM */
+            background-image: url('heart.png');
+            background-repeat: no-repeat;
+            background-position: 6px 8px;
+            background-size: 16px;
+        }
+
+        .kitkat {
+            /* OVERWRITES */
+            background-color:      #4F4F4F !important;
+            -webkit-border-radius: 24px !important;
+                    border-radius: 24px !important;
+        }
+        .kitkat p {
+            /* OVERWRITES */
+            /*max-width:  160px    !important;*/
+            /*margin:     0        !important;*/
+            padding:    12px 24px !important;
+
+            /*font-size:  14px     !important;*/
+            /*color:      #FFFFFF  !important;*/
+            /*text-shadow:none     !important;*/
+
+            /*border:     none     !important;*/
+        }
+        </style>
+    </head>
+    <body>
+
+    <div id="demoPage" data-role="page">
+
+        <div data-role="header" data-theme="b">
+            <h1>Demo</h1>
+        </div><!-- /header -->
+
+        <div role="main" class="ui-content">
+            <a id="default" href="#" class="ui-btn">Default</a>
+            <a id="longer" href="#" class="ui-btn">Longer</a>
+            <a id="top" href="#" class="ui-btn">Postion: top</a>
+            <a id="center" href="#" class="ui-btn">Position: center</a>
+            <a id="bottom" href="#" class="ui-btn">Position: bottom</a>
+            <a id="custom" href="#" class="ui-btn">Custom styling</a>
+            <a id="custom-kitkat" href="#" class="ui-btn">Custom styling (KitKat)</a>
+            <a id="close-event" href="#" class="ui-btn">Close event</a>
+            <a id="animate-css" href="#" class="ui-btn">Animate.css (In)</a>
+            <a id="animate-css2" href="#" class="ui-btn">Animate.css (In/Out)</a>
+        </div><!-- /content -->
+
+    </div><!-- /page -->
+
+    <script src="../dist/jquery.mobile.toast.min.js"></script>
+    <script src="examples.js"></script>
+
+    </body>
+</html>

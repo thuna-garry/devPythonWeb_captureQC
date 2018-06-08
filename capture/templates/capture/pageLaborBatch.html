@@ -1,0 +1,170 @@
+{% extends "capture/captureBase.html" %}
+
+{% block pageStyles %}
+    <style>
+        .ui-listview > .ui-li-static {
+            padding: 0;
+            text-shadow: none;
+        }
+        .itemWrapper   {
+            position: relative;
+            padding-right: 20px;
+        }
+        .itemContent  {
+            position: relative;
+            padding: 8px;
+        }
+        .itemContentOnWork   {
+            background-color: #ebffeb;
+            border: 2px solid #bbffbb;
+            padding: 6px
+        }
+        .onWorkDark   {
+            background-color:  #bbffbb !important;
+        }
+        .itemWorking {
+            position: absolute;
+            bottom: 3px; right: 18px;   /*based itemWrapper's' padding-right of 20 */
+            padding: 0;
+            margin: 0;
+
+            -ms-transform-origin:     100% 100%; -ms-transform:     rotate(90deg);   /* IE 9 */
+            -webkit-transform-origin: 100% 100%; -webkit-transform: rotate(90deg);   /* Chrome, Safari, Opera */
+            transform-origin:         100% 100%; transform:         rotate(90deg);
+        }
+
+        .woTitleWrap {
+            position: relative;
+        }
+        .woTitle {
+             white-space: nowrap;
+             position: absolute;
+             left: 0;
+             right: 5em;
+             text-overflow: ellipsis;
+             overflow: hidden;
+        }
+
+        .ui-content {
+            padding: .5em;
+        }
+    </style>
+{% endblock pageStyles %}
+
+{% block pageDivAttr %} ng-controller="captureFormBatchLabourCtrl" ng-init="init('{{frmName}}')" {% endblock pageDivAttr %}
+
+{% block pageHeaderToolsRight %}
+    {% verbatim %}
+        <div id="buttonBar" style="float: right; margin: 3px 5px 0 0">
+            <span ng-repeat="fld in form.flds">
+                <span ng-if="fld.type == 'action'">
+                    <button ng-click="entryDone($index, true)" class="ui-btn ui-btn-d ui-corner-all ui-mini" style="margin:0 0 0 5px; background-color: inherit">
+                        {{aqcUtils.getFldAttr(form, fld.name, 'label')}}
+                        <span class="fa {{aqcUtils.getFldAttr(form, fld.name, 'icon')}} fa-lg" ></span>
+                    </button>
+                </span>
+            </span>
+            <button onclick="$('#panelOptions').panel('toggle', {});"  class="ui-btn ui-btn-d ui-corner-all ui-mini" style="margin:0 0 0 5px; background-color: inherit">
+                <span class="fa fa-ellipsis-v fa-lg" ></span>
+            </button>
+        </div>
+    {% endverbatim %}
+{% endblock pageHeaderToolsRight %}
+
+{% block pageMiddle %}
+    {% verbatim %}
+        <p class="formDesc">
+            {{ form.desc }}
+        </p>
+        <div ng-repeat="fld in form.flds" class="noSelect">
+            <div ng-if="fld.type == 'lineEdit'" class="ajaxLoaded" style="display: table">
+                <div style="display: table-cell; vertical-align: middle; padding: 0em 0em .35em 0em;">
+                    {{fld.label}}
+                </div>
+                <div style="display: table-cell; vertical-align: middle; padding: 0px 0em .35em .5em;">
+                    <input type="text" id="{{form.name}}-{{fld.name}}"
+                           maxlength="{{fld.length}}" size="{{fld.size}}"
+                           placeholder="{{fld.prompt}}" value="{{fld.value}}"
+                           ng-model="fld.value" ng-disabled="!fld.enabled"  ng-focus="gotFocus($index)" ng-change="change($index)"
+                           aqc-keyed-advance="entryDone($index)" ng-blur="entryDone($index)" aqc-select-on-focus />
+                </div>
+                <div style="display: table-cell; vertical-align: middle; padding: 0em  0em .35em .5em;">
+                    <span ng-if="fld.msgType == 0"                      >{{fld.msg}}</span>
+                    <span ng-if="fld.msgType < 0"  style="color: red;"  >{{fld.msg}}</span>
+                    <span ng-if="fld.msgType > 0"  style="color: blue;" >{{fld.msg}}</span>
+                </div>
+            </div>
+
+            <div ng-if="fld.name == 'workOrderList'" class="ajaxLoaded">
+                <ul data-role="listview" data-inset="true">
+                    <li ng-repeat="wo in fld.listItems" ng-class="wo.countTasksClockedIn && 'onWorkDark'">
+                        <div class="itemWrapper" ng-click="showTaskDialog(wo);">
+
+                            <div class="itemContent" ng-class="wo.countTasksClockedIn && 'itemContentOnWork'">
+                                <div class="woTitleWrap">
+                                    <h3 class="woTitle">{{wo.si_number}}: &nbsp;&nbsp;{{wo.partNumber}}</h3>
+                                    <p class="floatRight">{{wo.woo_statusDesc}}</p>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <p><strong>{{wo.partDesc}}</strong></p>
+                                <p style="white-space: normal;">{{wo.symptom}}</p>
+                            </div>
+
+                            <p class="itemWorking onWorkDark" ng-if="wo.countTasksClockedIn">
+                                {{'Work '}}&nbsp; <strong>{{wo.countTasksClockedIn}}</strong> / <strong>{{wo.countTasks}}</strong>
+                            </p>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endverbatim %}
+{% endblock pageMiddle %}
+
+{% block popup %}
+    {% verbatim %}
+        <div id="pageWoTasks" data-role="page" class="ui-responsive-panel">
+
+            <div data-role="header" data-position="fixed" data-tap-toggle="false" class="noSelect">
+                <h1>{{cloneWorkOrder.si_number}} Tasks/Jobs</h1>
+                <!--<button ng-click="taskCancel()"   data-theme="d" data-shadow="false"><span class="fa fa-mail-reply fa-lg" ></span></button>-->
+                <button ng-click="taskCancel()" data-theme="d" data-shadow="false" data-icon="back" >Cancel</button>
+                <button ng-click="taskSave()"   data-theme="d" data-shadow="false">Save <span class="fa fa-save fa-lg" ></span></button>
+            </div>
+
+            <div data-role="content" class="noSelect">
+                <ul data-role="listview" data-inset="true">
+                    <li ng-repeat="task in cloneWorkOrder.tasks" ng-class="task.clockedIn && 'onWorkDark'">
+                        <div class="itemWrapper" ng-click="clockInOut(task);">
+
+                            <div class="itemContent"  ng-class="task.clockedIn && 'itemContentOnWork'">
+                                <div class="woTitleWrap">
+                                    <h3 class="woTitle">{{task.sequence}}: &nbsp;{{task.masterDesc}}</h3>
+                                    <p class="floatRight">{{task.wot_statusDesc}}</p>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <!--<p>{{task.wot_auto_key}}</p>-->
+                                <p ng-if="task.longDesc != task.masterDesc" style="white-space: normal;">{{task.longDesc}}</p>
+                            </div>
+
+                            <p class="itemWorking onWorkDark" ng-if="task.clockedIn">
+                                Working
+                            </p>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div ng-class="{overlay: showOverlay}"></div>
+    {% endverbatim %}
+{% endblock popup %}
+
+{% block localPanelOptions %}
+    {% verbatim %}
+        <a ng-click="restartLastBatch()" data-rel="back" data-role="button">Restart Last Batch</a>
+        <a ng-click="stopAllTasks()" data-rel="back" data-role="button">Stop All Tasks</a>
+    {% endverbatim %}
+{% endblock localPanelOptions %}

@@ -1,0 +1,48 @@
+{% extends "core/coreBase.html" %}
+
+{% load callWithArgs %}
+{% load staticfiles %}
+
+{% block bodyAttr %} ng-app="captureApp" {% endblock bodyAttr %}
+
+{% block pageHeaderToolsLeft %}
+    <button onclick="$('#panelNav').panel('toggle', {});"     data-theme="d" data-shadow="false"><span class="fa fa-bars fa-lg" ></span></button>
+{% endblock pageHeaderToolsLeft %}
+value|default_if_none:"nothing"
+{% block pageHeader %}
+    <h1 aqc-idle="{{request.session.defaultsProfile.idleTime|default_if_none:'0'}}"
+        aqc-timeout="{{request.session.defaultsProfile.idleTimeOut|default_if_none:'0'}}" class="noSelect">
+        {% verbatim %}
+            {{form.label}}
+            <div ng-if="formMsg.length > 0" class="fadeAway10" style="z-index: 1200; pointer-events: none; position: absolute; top: 12px; left: 0px; right: 0px;">
+                <span ng-if="formMsgType == 0" class="formMsg" style="border-radius: 8px;">{{formMsg}}</span>
+                <span ng-if="formMsgType  < 0" class="formMsg" style="border-radius: 8px; background-color: lightcoral;">{{formMsg}}</span>
+                <span ng-if="formMsgType  > 0" class="formMsg" style="border-radius: 8px; background-color: lightgreen;">{{formMsg}}</span>
+            </div>
+        {% endverbatim %}
+    </h1>
+{% endblock pageHeader %}
+
+
+{% block panelNav %}
+    {% if frmName != 'menu' %}
+        {% for p in pages %}
+            <a href="{% url 'capture:ajax_formURL' %}{{p.name}}.html" data-role="button" data-icon="arrow-r" data-iconpos="right">
+                {{p.label}}
+            </a>
+        {% endfor %}
+        {% if pages %}
+            <div style="height: 1em; border-bottom: 3px solid #dddddd;"></div>
+        {% endif %}
+    {% endif %}
+    {% if frmName != 'profile' and not request.session.conUser.public %}
+        <a href="{% url 'capture:profile' %}" data-role="button" data-icon="arrow-r" data-iconpos="right">Profile</a>
+    {% endif %}
+    <a href="{% url 'capture:about' %}"  data-role="button" data-icon="arrow-r" data-iconpos="right">About</a>
+    <a href="{% url 'capture:logout' %}" data-role="button" data-icon="power" data-iconpos="right">Logout</a>
+{% endblock panelNav %}
+
+{% block panelOptions %}
+    {% block localPanelOptions %}
+    {% endblock localPanelOptions %}
+{% endblock panelOptions %}

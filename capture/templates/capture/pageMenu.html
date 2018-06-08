@@ -1,0 +1,13 @@
+{% extends "capture/captureBase.html" %}
+
+{% block pageDivAttr %} {% endblock pageDivAttr %}
+
+{% block pageHeader %}
+    <h1>{{APPNAME}}<sup>&copy;</sup> Forms</h1>
+{% endblock pageHeader %}
+
+{% block pageMiddle %}
+    {% for p in pages %}
+        <a href="{% url 'capture:ajax_formURL' %}{{p.name}}.html" data-role="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left">{{p.label}}</a>
+    {% endfor %}
+{% endblock pageMiddle %}

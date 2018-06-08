@@ -1,0 +1,57 @@
+{% extends "core/coreBase.html" %}
+{% load staticfiles %}
+
+{% block pageHeader %}
+    <h1>About {{APPNAME}}<sup>&copy;</sup></h1>
+{% endblock pageHeader %}
+
+{% block pageHeaderToolsLeft %}
+    <button onclick="window.history.back();" data-theme="d" data-shadow="false"><span class="fa fa-mail-reply fa-lg" ></span></button>
+    <!--<a href="" data-role="button" data-inline="true" data-rel="back" data-theme="d" data-shadow="false"><span class="fa fa-mail-reply fa-lg" ></span></a>-->
+{% endblock pageHeaderToolsLeft %}
+
+{% block pageMiddle %}
+    <div style="margin: auto; max-width:569px; font-size: smaller">
+        <img src="{% static 'resources/aqcCloud.png' %}"/>
+
+        <div class="itemContent">
+            <div style="line-height: 150%">
+                <div class="floatLeft">
+                    <p class="floatLeft" style="opacity: .75">
+                        Application Name:&nbsp;&nbsp;<br/>
+                        Application Version:&nbsp;&nbsp;</br>
+                        Deployment Restrictions:&nbsp;&nbsp;</br>
+                        User/Device Limits:&nbsp;&nbsp;</p>
+                    <p class="floatLeft" style="text-align: left">
+                        {{ APPNAME }}<br/>
+                        {{ version }}<br/>
+                        -- None --</br>
+                        -- Unlimited --</p>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="floatRight">
+                    <p class="floatRight" style="text-align: left">
+                        {{ COMPANY }}<br>
+                        {{ DBUSER }}<br>
+                        {{ expiresOn }}</p>
+                    <p class="floatRight" style="text-align: right; opacity: .75">
+                        Licensee:&nbsp;&nbsp;<br>
+                        Database:&nbsp;&nbsp;<br>
+                        Renewal Due:&nbsp;&nbsp;</p>
+                    <div style="clear: both;"></div>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+
+        <div style="line-height: 150%">
+            <p>
+                For information, training, or support with this product you can text or call AdvanceQC at
+                1-800-416-6464, or send us an <a href="mailto:{{APPNAME}}@advanceQC.com?Subject={{APPNAME}}%20@%20{{COMPANY}}">e-mail</a>.
+            </p>
+            <p style="margin-top:2em">
+                {{ COPYRIGHT }}
+            </p>
+        </div>
+    </div>
+{% endblock pageMiddle %}

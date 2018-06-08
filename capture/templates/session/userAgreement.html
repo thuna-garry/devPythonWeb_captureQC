@@ -1,0 +1,15 @@
+{% extends "core/coreBase.html" %}
+
+{% block pageHeader %}
+    <h1>{{COMPANY}} User Agreement</h1>
+{% endblock pageHeader %}
+
+{% block pageMiddle %}
+    <div>
+        {{ USERAGREEMENT |safe }}
+    </div>
+    <form id="form1" style="text-align: center;" name="form" action="{% url 'capture:userAgreement' %}" method="post">{% csrf_token %}
+        <input type="submit" name="agree" data-inline="true" data-icon="delete" value="Do Not Agree">&nbsp;
+        <input type="submit" name="agree" data-inline="true" data-icon="check"  value="Agree">
+    </form>
+{% endblock pageMiddle %}

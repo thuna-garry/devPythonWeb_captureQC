@@ -1,0 +1,51 @@
+{% extends "core/coreBase.html" %}
+
+{% block pageHeader %}
+    <h1>{{APPNAME}}<sup>&copy;</sup> Login</h1>
+{% endblock pageHeader %}
+
+{% block pageStyles %}
+    <style>
+        ul {
+            list-style-type: none;
+        }
+    </style>
+{% endblock pageStyles %}
+
+
+{% block pageScripts %}
+    <script>
+        $(function() {
+            document.getElementById('tzOffset').value = new Date().getTimezoneOffset();
+        });
+    </script>
+{% endblock pageScripts %}
+
+
+{% block pageMiddle %}
+    <div style="margin: auto; max-width:325px;">
+        <form id="form1" name="form" action="{% url 'capture:login' %}" method="post">
+            {% csrf_token %}
+            <table>
+                {% for field in form %}
+                    <tr>
+                        <td class="fieldLabel">{{ field.label_tag }}</td>
+                        <td>{{ field }}</td>
+                        <td><span class="fieldErr">{{ field.errors | striptags }}</span></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <br/>
+            <div style="text-align: right;">
+                <input type="submit" value="Login" data-inline="true" data-icon="check"/>
+            </div>
+            <input type="hidden" id="tzOffset" name="tzOffset" value="setByJavascript"/>
+            <br/><br/>
+            <div class="formErr">{{ form.non_field_errors }}</div>
+        </form>
+    </div>
+{% endblock pageMiddle %}
+
+{% block panelOptions %}
+    <a href="{% url 'capture:resetPassword' %}" data-role="button">Password Reset</a>
+{% endblock panelOptions %}

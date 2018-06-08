@@ -1,0 +1,123 @@
+{% extends "core/base.html" %}
+{% load staticfiles %}
+
+{% block html %}
+    <script type="text/javascript"  src="{% static 'jqGrid-4.6.0/js/i18n/grid.locale-en.js' %}"  ></script>
+    <script type="text/javascript"  src="{% static 'jqGrid-4.6.0/js/jquery.jqGrid.min.js' %}" ></script>
+    <link   type="text/css"        href="{% static 'jqGrid-4.6.0/css/ui.jqgrid.css' %}" rel="stylesheet" media="screen" />
+{% endblock html %}
+
+{% block pageScripts %}
+{% endblock pageScripts %}
+
+{% block pageStyles %}
+{% endblock pageStyles %}
+
+{% block pageTitle %}
+    User Accounts
+{% endblock pageTitle %}
+
+{% block pageContent %}
+    <script>
+        var tab;
+        var nominalGridWidth;
+        $(function () {
+            tab = $("#tab");
+            tab .jqGrid({
+                    url: "{% url 'capture:ajax_userList' %}",//"userList.jqg",
+                    mtype: "GET",
+                    datatype: "json",
+                    gridview: true,
+                    jsonReader : {
+                            repeatitems: false,
+                            id: "seqUser"
+                        },
+                    colNames: ["User-ID", "Name", "E-Mail", "Phone", "Enabled", "Valid From", "Valid Until", "Is Admin", "Last Login (Calgary)"],
+                    colModel: [
+                            { name: "userId",        width:125,  sortable:false, align:"left" },
+                            { name: "name",          width:175,  sortable:false, align:"left" },
+                            { name: "email",         width:170,  sortable:false, align:"left" },
+                            { name: "phone",         width:100,  sortable:false, align:"center" },
+                            { name: "enabled",       width:60,   sortable:false, align:"center", formatter: "checkbox", resizable: false},
+                            { name: "validFrom",     width:80,   sortable:false, align:"center" },
+                            { name: "validUntil",    width:80,   sortable:false, align:"center" },
+                            { name: "admin",         width:60,   sortable:false, align:"center", formatter: "checkbox", resizable: false },
+                            { name: "lastLoggedIn",  width:140,  sortable:false, align:"center" }
+                        ],
+                    // grid sizing
+                        autowidth: true,
+                        shrinkToFit: false,
+                        height: "100%",
+                    // header of grid
+                        caption: "User Accounts for {{ request.session.conOrg.name }}",
+                        hidegrid: false,
+                        sortable: true,
+                    // body of grid
+                        rowNum: 0,
+                        hoverrows: false,
+                        autoencode: false,
+                    // footer of grid
+                        pager: "#tabPager",
+                        pgbuttons: false,     // disable page control like next, back button
+                        pgtext: null,         // disable pager text like 'Page 0 of 10'
+                        viewrecords: false,   // disable current view record text like 'View 1-10 of 100'
+                        editurl: "{% url 'capture:ajax_userEdit' %}"
+                    })
+                .jqGrid('navGrid', '#tabPager'
+                    , { edit: false, edittitle: "Edit Selected User Account"
+                      , add: false,  addtitle:  "Add User Account"
+                      , del: true,   deltitle: "Delete Selected User Account"  //, delfunc: function(){ alert("do delete account"); }
+                      , search: false
+                      , view: false
+                      , refreshtitle: "Reload User Accounts"
+                      , alertcap: "Selection Required", alerttext: "Please select a user account before using this command."
+                      }
+                    , /*prmEdit*/ {}
+                    , /*prmAdd */ {}
+                    , /*prmDel*/ { 'msg': 'Delete user account?'
+                                 , closeOnEscape: true
+                                 , delData: {csrfmiddlewaretoken: '{{ csrf_token }}'}
+                                 }
+                    , /*prmSearch*/ {}
+                    , /*prmView*/ {}
+                    )
+                .jqGrid('navButtonAdd', "#tabPager"
+                    ,{  title: "Edit Selected User Account", caption: "",
+                        buttonicon: "ui-icon-pencil",
+                        position: "first",
+                        onClickButton: function() {
+                            var selRowId = tab.jqGrid('getGridParam', 'selrow');
+                            if (selRowId) {
+                                window.location.href = jQuery(tab.jqGrid('getCell', selRowId, 'userId')).prop('href');
+                            } else {
+                                //alter(tab.getGridParam('alerttext'));
+                                alert("Please select a user account before using this command.");
+                            }
+                        }}
+                    )
+                .jqGrid('navButtonAdd', "#tabPager"
+                    ,{  title: "Add User Account", caption: "",
+                        buttonicon: "ui-icon-plus",
+                        position: "first",
+                        onClickButton: function() {
+                            window.location.href = "{% url 'capture:userEdit' 0 %}";
+                        }}
+                    );
+            nominalGridWidth = tab.outerWidth() + {{GRID_VERT_SCROLLBAR_WIDTH}};
+            $(window)
+                .bind('resize', function() {
+                        var w = $("#table").width();
+                        if (w > nominalGridWidth)
+                            w = nominalGridWidth;
+                        tab.setGridWidth(w);
+                        tab.setGridHeight(Math.max(100, document.documentElement.clientHeight - {{CLIENT_AREA_HEIGHT_USED}}));
+                    })
+                .trigger('resize').trigger('resize');
+        });
+    </script>
+
+    <div id="table" style="padding: 1em; overflow-x: hidden;">
+        <table id="tab"><tr><td></td></tr></table>
+        <div id="tabPager"></div>
+    </div>
+{% endblock pageContent %}

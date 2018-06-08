@@ -1,0 +1,59 @@
+{# panel to be included on the dashboard page #}
+
+    <script>
+        var {{p.name}}tab;
+        $(function () {
+            {{p.name}}tab = $("#{{p.name}}tab");
+            {{p.name}}tab
+                .jqGrid({
+                    url: "{% url 'capture:ajax_recentUsers' %}",
+                    mtype: "GET",
+                    datatype: "json",
+                    gridview: true,
+                    jsonReader : {
+                            repeatitems: false,
+{#                            id: "userId"#}
+                        },
+                    colNames: ["User-ID", "Name", "Last Login (Calgary)"],
+                    colModel: [
+                        { name: "userId",        width:75, sortable:false },
+                        { name: "name",         width:200, sortable:false },
+                        { name: "lastLoggedIn", width:130, sortable:false, align:"left" }
+                    ],
+                    // grid sizing
+                        autowidth: true,
+                        shrinkToFit: true,
+                        height: "auto",
+                    // header of grid
+                        caption: "Recent User Access",
+                        hidegrid: false,
+                    // body of grid
+                        rowNum: 3,
+                        loadonce: true,
+                        hoverrows: false,
+                        autoencode: false
+                });
+        });
+    </script>
+
+
+    <div id="{{p.name}}panel" class="panel" data-ss-colspan="4" style="height: 215px">
+
+        <div id="{{p.name}}panelHeader" class="panelHeader">
+            User Account Admin
+        </div>
+
+        <div id="{{p.name}}panelContent" class="panelContent">
+            <p id="{{p.name}}panelLeadIn" style="margin:0px 0px 10px 0px;">
+                Your account has privileges to administer all the user
+                {% comment %}
+                accounts for <a href="{% url "customerPortal:userList" %}">{{ p.org }}</a>.
+                {% endcomment %}
+            </p>
+            <div id="{{p.name}}tabBoundBox">
+                <table id="{{p.name}}tab"><tr><td></td></tr></table>
+                <div id="{{p.name}}pager"></div>
+            </div>
+        </div>
+
+    </div>

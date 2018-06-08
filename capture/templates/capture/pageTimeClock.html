@@ -1,0 +1,117 @@
+{% extends "capture/captureBase.html" %}
+{% load staticfiles %}
+
+{% block pageStyles %}
+    <style>
+        .itemWrapper   {
+            position: relative;
+            width: 75vw;
+            margin: auto;
+        }
+        .itemContent {
+            position: relative;
+            min-height: 3em;
+            padding: 8px;
+        }
+        .buttonDefault {
+            background-color: #ebffeb !important;
+            border: 2px solid #bbffbb !important;
+            padding: 6px
+        }
+        .buttonDefault:hover {
+            background-color: #dbffdb !important;
+            border: 2px solid #abffab !important;
+        }
+        .eventName {
+            white-space: nowrap;
+            position: absolute;
+            left: 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            font-weight: normal;
+        }
+        .eventNameDefault {
+            font-size: larger;
+            font-weight: bolder;
+        }
+        .scanTime {
+            position: absolute;
+            text-align: right;
+            right: 0;
+            font-weight: normal;
+        }
+    </style>
+{% endblock pageStyles %}
+
+{% block localServices %}
+    <script type="text/javascript">
+        captureApp.service('localService', function() {
+            this.foo = function(form, stock ) {
+            };
+        });
+    </script>
+{% endblock localServices %}
+
+{% block pageDivAttr %} ng-controller="captureFormCtrl" ng-init="init('{{frmName}}')" {% endblock pageDivAttr %}
+
+{% block pageHeaderToolsRight %}
+    {% verbatim %}
+        <div id="buttonBar" style="float: right; margin-right: 5px">
+            <span ng-repeat="fld in form.flds">
+                <span ng-if="fld.type == 'action'">
+                    <button ng-click="entryDone($index, true)" data-theme="d" data-shadow="false"
+                               class="ui-btn ui-btn-a ui-corner-all"
+                               style="background-color: inherit">
+                        {{aqcUtils.getFldAttr(form, fld.name, 'label')}}
+                        <span class="fa {{aqcUtils.getFldAttr(form, fld.name, 'icon')}} fa-lg" ></span>
+                    </button>
+                </span>
+            </span>
+        </div>
+    {% endverbatim %}
+{% endblock pageHeaderToolsRight %}
+
+{% block pageMiddle %}
+    {% verbatim %}
+        <p class="formDesc">
+            {{ form.desc }}
+        </p>
+        <div ng-repeat="fld in form.flds" class="noSelect">
+            <div ng-if="fld.type == 'lineEdit'" class="ajaxLoaded" style="display: table">
+                <div style="display: table-cell; vertical-align: middle; padding: 0em 0em .35em 0em;">
+                    {{fld.label}}
+                </div>
+                <div style="display: table-cell; vertical-align: middle; padding: 0px 0em .35em .5em;">
+                    <input type="text" id="{{form.name}}-{{fld.name}}"
+                           maxlength="{{fld.length}}" size="{{fld.size}}"
+                           placeholder="{{fld.prompt}}" value="{{fld.value}}"
+                           ng-model="fld.value" ng-disabled="!fld.enabled"  ng-focus="gotFocus($index)" ng-change="change($index)"
+                           aqc-keyed-advance="entryDone($index)" ng-blur="entryDone($index)" aqc-select-on-focus />
+                </div>
+                <div style="display: table-cell; vertical-align: middle; padding: 0em  0em .35em .5em;">
+                    <span ng-if="fld.msgType == 0"                      >{{fld.msg}}</span>
+                    <span ng-if="fld.msgType < 0"  style="color: red;"  >{{fld.msg}}</span>
+                    <span ng-if="fld.msgType > 0"  style="color: blue;" >{{fld.msg}}</span>
+                </div>
+            </div>
+
+            <div ng-if="fld.name == 'clockEvents'" class="ajaxLoaded">
+                <div ng-repeat="ce in fld.listItems" class="itemWrapper">
+                       <button ng-click="fld.value=ce.tag; entryDone(aqcUtils.getFldIdx(form, fld.name), true);"
+                               default="{{ce.focus}}" xxxclass="itemContentActive"  ng-disabled="!ce.enabled"
+                                                        ng-class="{'buttonDefault': ce.focus}">
+                           <div class="itemContent">
+                                <span class="eventName" ng-class="{'eventNameDefault': ce.focus}">{{ce.label}}</span>
+                                <span class="scanTime" ng-if="!ce.focus">{{ce.scanTime}}</span>
+                                <span class="scanTime" ng-if="ce.focus"><aqc-clock format="HH:mm:ss"></aqc-clock></span>
+                           </div>
+                       </button>
+                </div>
+            </div>
+
+        </div>
+    {% endverbatim %}
+{% endblock pageMiddle %}
+
+{% block localPanelOptions %}
+{% endblock localPanelOptions %}

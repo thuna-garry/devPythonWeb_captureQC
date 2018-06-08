@@ -1,0 +1,20 @@
+{% extends "core/coreBase.html" %}
+
+{% block pageHeader %}
+    <h1>Session Error</h1>
+{% endblock pageHeader %}
+
+{% block pageMiddle %}
+    <p class="pageErr">
+        Your session has expired or otherwise been invalidated.
+    </p>
+    <p>
+        <span style="font-weight: bold;">Note</span>: this site requires that both cookies and javascript
+        are enabled in your browser.  If you have just logged-in and you are seeing this error check these
+        settings in your browser.
+    </p>
+    <br/>
+    <div style="text-align: center;">
+        <a href="{% url 'capture:login' %}" data-role="button" data-inline="true">Continue</a>
+    </div>
+{% endblock pageMiddle %}

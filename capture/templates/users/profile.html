@@ -1,0 +1,42 @@
+{% extends "capture/captureBase.html" %}
+
+{% block pageHeader %}
+    <h1>User Profile</h1>
+{% endblock pageHeader %}
+
+{% block pageHeaderToolsLeft %}
+    <button data-icon="back" data-theme="d" data-shadow="false" onclick="window.history.back();">Cancel</button>
+{% endblock pageHeaderToolsLeft %}
+
+{% block pageHeaderToolsRight %}
+        <button data-theme="d" data-shadow="false" data-mini="true">
+            <label for="hiddenSubmit" style="font-size: 13px; font-weight: bold;">
+                Save&nbsp;&nbsp;<span class="fa fa-save fa-lg" ></span>
+            </label>
+        </button>
+{% endblock pageHeaderToolsRight %}
+
+{% block pageMiddle %}
+    <style>
+        .ui-input-text > input {
+            width: 12em !important;
+        }
+    </style>
+    <form id="form1" name="form" action="{% url 'capture:profile' %}" method="post">
+        {% csrf_token %}
+        <span class="formErr">{{ form.non_field_errors }}</span>
+        <table>
+            {% for field in form %}
+                <tr>
+                    <td class="fieldLabel">{{ field.label_tag }}</td>
+                    <td>{{ field }}</td>
+                    <td><span class="fieldErr">{{ field.errors | striptags }}</span></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br/>
+        <div style="text-align: center;">
+            <input type="submit" id="hiddenSubmit" style="display: none" data-role="none" value="Save" data-inline="true" data-icon="check"/>
+        </div>
+    </form>
+{% endblock pageMiddle %}
