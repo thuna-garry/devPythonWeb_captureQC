@@ -367,7 +367,7 @@ class ViewCapture(View):
                   from wo_operation     WOO
                      , parts_master     PNM
                      , wo_status        WOS
-                 where WOO.pnm_auto_key = PNM.pnm_auto_key
+                 where WOO.pnm_auto_key = PNM.pnm_auto_key (+)
                    and WOO.wos_auto_key = WOS.wos_auto_key (+)
                    {wClause}
             """.format(wClause=wClause)

@@ -152,7 +152,7 @@ class ViewCaptureWorkOrderStatus(ViewCapture):
                      , recentWorkOrder  recent
                      , symptom          symptom
                  where WOO.woo_auto_key = WOT.woo_auto_key
-                   and WOO.pnm_auto_key = PNM.pnm_auto_key
+                   and WOO.pnm_auto_key = PNM.pnm_auto_key (+)
                    and WOO.wos_auto_key = WOS.wos_auto_key (+)
                    and WOO.woo_auto_key = recent.woo_auto_key (+)
                    and WOO.woo_auto_key = symptom.WSL_woo_auto_key (+)

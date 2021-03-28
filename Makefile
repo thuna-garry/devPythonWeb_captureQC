@@ -2,12 +2,13 @@ APP=capture
 APPQC=${APP}QC
 TMP=/tmp/buildout
 BLD=${TMP}/${APP}QC
-PYTHON=/cygdrive/c/Python27/python.exe
+#PYTHON=/cygdrive/c/Python27/python.exe
+PYTHON=/cygdrive/c/Users/adlDevel/venvAqc1/Scripts/python.exe
 
 default: dist
 
 version:
-	PYTHONPATH="c:\\dev\\aqc" $(PYTHON) root/config.py -version
+	PYTHONPATH="c:\\devPython\\web\\captureQC" $(PYTHON) root/config.py -version
 
 compileAll:
 	$(PYTHON) -m compileall -f -q .
@@ -25,8 +26,8 @@ dist: compileAll
 	#------------------------------------------------
 	#- copying files into ${BLD}
 	#------------------------------------------------
-	rsync -a /cygdrive/c/dev/web/${APPQC}  ${TMP}
-	rsync -a /cygdrive/c/dev/aqc/aqclib    ${BLD}
+	rsync -av /cygdrive/c/devPython/web/${APPQC} --exclude '.git*' --exclude '.idea' ${TMP}
+	rsync -av /cygdrive/c/devPython/aqc/aqclib    ${BLD}
 	chmod -R u+rwx ${BLD}
 	#
 	#
@@ -53,10 +54,11 @@ dist: compileAll
 	#------------------------------------------------
 	#- remove un-needed files/directories
 	#------------------------------------------------
+	find ${BLD} -type d -name '.git'   -print | while read f; do echo deleting $$f; rm -rf $$f; done
 	find ${BLD} -type d -name '.idea'  -print | while read f; do echo deleting $$f; rm -rf $$f; done
 	find ${BLD} -type d -name 'static' -print | while read f; do echo deleting $$f; rm -rf $$f; done
 	#
-	find ${BLD} -type f -name 'Makefile'   -print | while read f; do echo deleting $$f; rm -rf $$f; done
+	find ${BLD} -type f -name 'Makefile'  -print | while read f; do echo deleting $$f; rm -rf $$f; done
 	#
 	rm -rf ${BLD}/${APP}/db/templates
 	rm -rf ${BLD}/${APP}/db/templates/wrapPackage.sh

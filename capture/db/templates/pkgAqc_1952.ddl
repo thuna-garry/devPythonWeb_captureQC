@@ -10,14 +10,14 @@ create or replace package body aqc_1952 as
     --
     --
     -- AvroTechnik generally has only two tasks on their work orders.  The first relates to inspection and when it is
-    -- started work order's status should advance to 'In Prog-Initial'.  Similarly when work starts on the secont the
-    -- work order status should advance to 'In-Prog. Final.  To know if the work-order status should change when labour
+    -- started work order's status should advance to 'In Prog-Initial'.  Similarly when work starts on the second the
+    -- work order status should advance to 'In-Prog. Final'.  To know if the work-order status should change when labour
     -- is being undertaken on a particular task, we use the 'severity' of the wo_status.  This routine will only advance
     -- the status if the current status is lower than what we would want to change it to (either in-prog-init or
     -- in-prog-final).
     procedure advanceStatus (p_wotAutoKey number) as
         IN_PROG_INIT  constant  varchar2(20) := 'In Prog-Initial';
-        IN_PROG_FINI  constant  varchar2(20) := 'In-Prog. Final';
+        IN_PROG_FINI  constant  varchar2(20) := 'In-Prog.';
         l_ipi_wos_auto_key number;   l_ipi_severity  number;
         l_ipf_wos_auto_key number;   l_ipf_severity  number;
         l_wooAutoKey number;  l_wotSequence number;

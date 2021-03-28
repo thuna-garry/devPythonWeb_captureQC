@@ -133,7 +133,7 @@ class ViewCaptureLabour(ViewCapture):
                      , wo_status      WOS
                      , wo_task_master WTM
                  where WOT.wos_auto_key = WOS.wos_auto_key (+)
-                   and WOT.wtm_auto_key = WTM.wtm_auto_key  -- all tasks have a masters
+                   and WOT.wtm_auto_key = WTM.wtm_auto_key  -- all tasks have a master
                    and WOT.wot_auto_key = :wot_auto_key """
         row, fldNames = dbFetchOne(None, q, fs)
 

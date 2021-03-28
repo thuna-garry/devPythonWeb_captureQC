@@ -687,8 +687,8 @@ class ViewCaptureLabourBatch(ViewCapture):
                      , WOT.sequence         as sequence      --5
                      , WTM.description      as masterDesc    --6
                      --, nvl(nvl(WOT.squawk_desc, WOT.long_descr), null)    as longDesc  --7
-                     , QC_WO_PKG2.get_taks_descr(WOT.wot_auto_key)        as longDesc  --7
-                     , decode(nvl(recent.woo_auto_key, -1), -1, 0, 1)     as recent    --8
+                     , QC_WO_PKG2.get_taks_descr(WOT.wot_auto_key)        as longDesc    --7
+                     , decode(nvl(recent.woo_auto_key, -1), -1, 0, 1)     as recent      --8
                      , nvl(inProgress.clockedIn, 0)                                      as taskClockedIn        --9
                      , count(WOT.wot_auto_key)     over (partition by WOO.woo_auto_key)  as countTasks           --10
                      , count(inProgress.clockedIn) over (partition by WOO.woo_auto_key)  as countTasksClockedIn  --11
@@ -704,7 +704,7 @@ class ViewCaptureLabourBatch(ViewCapture):
                      , recentWorkOrder  recent
                      , inProgressTasks  inProgress
                      , symptom          symptom
-                 where WOO.pnm_auto_key = PNM.pnm_auto_key
+                 where WOO.pnm_auto_key = PNM.pnm_auto_key (+)
                    and WOO.woo_auto_key = WOT.woo_auto_key
                    and WOT.wtm_auto_key = WTM.wtm_auto_key  -- all tasks have a masters
                    and WOO.wos_auto_key = WOS_WOO.wos_auto_key (+)

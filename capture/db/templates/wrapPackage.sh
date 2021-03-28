@@ -10,7 +10,7 @@ pyClass=${ddlFile#pkg}                     # strip off leading 'pkg'
 pyClass=${pyClass%.ddl}                    # strip off trailing '.ddl'
 
 DDL_DIR=${DDL_PATH%/*}
-mkdir -p $DDL_DIR/wrapped
+mkdir -p ${DDL_DIR}/wrapped                # ensure the wrapped subDir exists
 
 {
     echo 'from dbPackage import *'
@@ -24,7 +24,8 @@ mkdir -p $DDL_DIR/wrapped
         section=${section%.sql}       #strip off suffix
         wrapFile=${DDL_DIR}/wrapped/${pyClass}.${section}.wrap.sql
         wrap iname=`cygpath -w ${sqlFile}` oname=`cygpath -w ${wrapFile}`  > /dev/null
-        echo "    _pkg${section} = \"\"\"`sed -e '$d' $wrapFile | base64 -w 0`\"\"\" "
+        sed -i -e 's/\s*$//' ${wrapFile}   #remove any trailing whitespace within the wrapped file
+        echo "    _pkg${section} = \"\"\"$(sed -e '$d' $wrapFile | base64 -w 0)\"\"\" "
     done
     echo
 } > $PY_PATH
@@ -34,7 +35,7 @@ rm -f $script_1
 
 
 #######################################################################################
-# ebedded seripts 
+# embedded seripts
 #######################################################################################
 exit
 
