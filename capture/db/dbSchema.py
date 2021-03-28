@@ -13,8 +13,9 @@ def install(dbCon):
 
 
 def installPackages(dbCon):
-    from capture.db.pkgAqcTrace  import AqcTrace
+    from capture.db.pkgAqcTrace     import AqcTrace
     from capture.db.pkgAqcCaptureQC import AqcCaptureQC
+    from capture.db.pkgAqc_1952     import Aqc_1952
     pkgs = ['AqcTrace', 'AqcCaptureQC', 'Aqc_1952']
 
     for pkg in pkgs:

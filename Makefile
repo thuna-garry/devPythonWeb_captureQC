@@ -12,17 +12,16 @@ version:
 
 compileAll:
 	$(PYTHON) -m compileall -f -q .
-	$(MAKE) -C ${APP}/db
-	$(MAKE) -C ${APP}/static
+	$(MAKE) -C ${APP}/db     $(MAKECMDGOALS)
+	$(MAKE) -C ${APP}/static $(MAKECMDGOALS)
 
-dist: compileAll
-	#------------------------------------------------
-	#- removing contents of ${BLD}
-	#------------------------------------------------
+clean:
 	rm -rf   ${BLD}*
 	mkdir -p ${BLD}
-	#
-	#
+	$(MAKE) -C ${APP}/db     $@
+	$(MAKE) -C ${APP}/static $@
+
+dist: clean compileAll
 	#------------------------------------------------
 	#- copying files into ${BLD}
 	#------------------------------------------------

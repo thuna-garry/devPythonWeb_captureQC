@@ -10,6 +10,7 @@
 #%.min.css: %.css
 #	curl -X POST -s --data-urlencode input@$< http://cssminifier.com/raw > $@
 
+all dist: capture.min.js
 
 capture.min.js: $(shell ls *.js 2>/dev/null | grep -v min.js)
 	# npm install -g uglify-js
@@ -17,10 +18,9 @@ capture.min.js: $(shell ls *.js 2>/dev/null | grep -v min.js)
 	uglifyjs $^   \
 	    -o $@  \
 	    --comments 'copyright'  \
-	    --source-map ${@}.map \
+	    --source-map \
 	    -c sequences,properties,dead_code,evaluate,join_vars,drop_console \
 	    -m  \
-	    --screw-ie8
 
 clean:
 	rm -f *.min.js

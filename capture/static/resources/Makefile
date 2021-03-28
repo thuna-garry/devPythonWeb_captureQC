@@ -1,3 +1,5 @@
+all dist: cssFiles
+
 cssFiles: $(patsubst %.css,%.min.css,$(shell ls *.css 2>/dev/null | grep -v min.css))
 	echo done.
 

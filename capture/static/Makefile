@@ -1,3 +1,3 @@
-foo: 
-	$(MAKE) -C resources
-	$(MAKE) -C javascript
+$(MAKECMDGOALS):
+	$(MAKE) -C resources  $@
+	$(MAKE) -C javascript $@
